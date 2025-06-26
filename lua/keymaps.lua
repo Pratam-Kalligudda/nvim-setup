@@ -51,4 +51,51 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- vim: ts=2 sts=2 sw=2 et
+-- NORMAL mode: Move current line up/down with Alt+Arrow
+vim.keymap.set('n', '<A-j>', ':m .+1<CR>==', { desc = 'Move line down', silent = true })
+vim.keymap.set('n', '<A-k>', ':m .-2<CR>==', { desc = 'Move line up', silent = true })
+
+-- VISUAL mode: Move selected block up/down with Alt+Arrow
+vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv", { desc = 'Move block down', silent = true })
+vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move block up', silent = true })
+
+vim.keymap.set('n', '<A-Down>', ':m .+1<CR>==', { desc = 'Move line down', silent = true })
+vim.keymap.set('n', '<A-Up>', ':m .-2<CR>==', { desc = 'Move line up', silent = true })
+
+-- VISUAL mode: Move selected block up/down with Alt+Arrow
+vim.keymap.set('v', '<A-Down>', ":m '>+1<CR>gv=gv", { desc = 'Move block down', silent = true })
+vim.keymap.set('v', '<A-Up>', ":m '<-2<CR>gv=gv", { desc = 'Move block up', silent = true })
+--
+vim.keymap.set('n', '<S-Up>', 'Vk', { noremap = true, desc = 'Visual select up' })
+vim.keymap.set('n', '<S-Down>', 'Vj', { noremap = true, desc = 'Visual select down' })
+vim.keymap.set('v', '<S-Up>', 'k', { noremap = true, desc = 'Extend selection up' })
+vim.keymap.set('v', '<S-Down>', 'j', { noremap = true, desc = 'Extend selection down' })
+
+vim.keymap.set('n', '<S-k>', 'Vk', { noremap = true, desc = 'Visual select up' })
+vim.keymap.set('n', '<S-j>', 'Vj', { noremap = true, desc = 'Visual select down' })
+vim.keymap.set('v', '<S-k>', 'k', { noremap = true, desc = 'Extend selection up' })
+vim.keymap.set('v', '<S-j>', 'j', { noremap = true, desc = 'Extend selection down' })
+
+-- Duplicate selection or current line down
+vim.keymap.set({ 'n', 'v' }, '<A-S-j>', function()
+  if vim.fn.mode() == 'v' then
+    -- Duplicate selected lines below
+    vim.cmd 'normal! y`>p'
+    vim.cmd 'normal! gv'
+  else
+    -- Duplicate current line below
+    vim.cmd 'normal! Yp'
+  end
+end, { desc = 'Duplicate line/selection down' })
+
+-- Duplicate selection or current line up
+vim.keymap.set({ 'n', 'v' }, '<A-S-k>', function()
+  if vim.fn.mode() == 'v' then
+    -- Duplicate selected lines above
+    vim.cmd 'normal! y`<P'
+    vim.cmd 'normal! gv'
+  else
+    -- Duplicate current line above
+    vim.cmd 'normal! YP'
+  end
+end, { desc = 'Duplicate line/selection up' })
