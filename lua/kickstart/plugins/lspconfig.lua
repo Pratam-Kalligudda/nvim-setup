@@ -75,6 +75,21 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
+          -- Show hover info automatically on CursorHold
+          vim.api.nvim_create_autocmd('CursorHold', {
+            buffer = event.buf,
+            callback = function()
+              vim.lsp.buf.hover()
+            end,
+            desc = 'Show LSP hover info after delay',
+          })
+
+          vim.api.nvim_create_autocmd('CursorMoved', {
+            buffer = event.buf,
+            callback = function()
+              vim.cmd 'silent! pclose' -- Close floating preview window
+            end,
+          })
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -247,6 +262,14 @@ return {
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
+          },
+        },
+        omnisharp = {
+          cmd = { 'omnisharp', '--languageserver', '--hostPID', tostring(vim.fn.getpid()) },
+          filetypes = { 'cs' },
+          root_dir = require('lspconfig.util').root_pattern('*.sln', '*.csproj'),
+          settings = {
+            useModernNet = false,
           },
         },
       }
